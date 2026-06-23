@@ -1,6 +1,6 @@
 # Chapter 7 — Auto Scaling in ECS
 
-Picture this. It's a normal Tuesday afternoon, your Streamlit app is humming along on two Fargate tasks, and someone in marketing decides to post your link in a newsletter that goes out to forty thousand people. Traffic triples in about ninety seconds. Your two tasks start choking, response times crawl, and you're frantically clicking "Update service" to bump the desired count while the spike is already happening.
+Imagine this. It's a normal Tuesday afternoon, your Streamlit app is humming along on two Fargate tasks, and someone in marketing decides to post your link in a newsletter that goes out to forty thousand people. Traffic triples in about ninety seconds. Your two tasks start choking, response times crawl, and you're frantically clicking "Update service" to bump the desired count while the spike is already happening.
 
 Then the opposite problem. It's 3 AM, almost nobody is using the app, and those same two tasks are sitting there doing nothing, billing you the whole time.
 
