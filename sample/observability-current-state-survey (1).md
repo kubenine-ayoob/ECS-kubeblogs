@@ -243,7 +243,7 @@ Four problems:
 
 Metrics Server is running and serves the resource-metrics API used by HPAs. It is not a metrics store and holds no history.
 
-Beyond that, no application metrics collection path was identified. for four reasons that compound. Even once Prometheus runs, causes B, C and D remain:
+Beyond that, no application metrics collection path was identified, for four reasons that compound.
 
 **A. Prometheus is not running** (Sections 3, 4).
 
