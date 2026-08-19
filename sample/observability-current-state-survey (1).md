@@ -18,11 +18,11 @@ Nothing else collects anything:
 - No Prometheus, Alertmanager, or Grafana pod is running in the inspected cluster.
 - The Prometheus Operator CRDs are not installed -- the API has no `servicemonitor` resource type.
 - No distributed tracing backend, collector, or instrumentation was identified in the inspected cluster or repository. No Tempo, Jaeger, or OpenTelemetry deployment.
-- No application metrics endpoint or collection configuration was identified in the inspected GitOps repository., and no application chart defines a ServiceMonitor.
+- No application metrics endpoint or collection configuration was identified in the inspected GitOps repository, and no application chart defines a ServiceMonitor.
 
 **This is not a tooling-selection problem.** The repository already contains a complete, vendored kube-prometheus-stack v70.2.1 -- Prometheus, Alertmanager, Grafana (already wired to Keycloak SSO), kube-state-metrics, node-exporter -- at `multi-tenant-cluster-apps/multi-tenant-init-apps/monitoring/`. The ArgoCD ApplicationSet that deploys the other init apps covers it by directory glob, so it should be deploying. It is not.
 
-A confirmed contributing cause is the following configuration:: `monitoring/values.yaml:34` sets `crds.enabled: false`. Without the CRDs, the operator cannot create Prometheus or Alertmanager resources, which matches the missing `servicemonitor` resource type exactly. That does not explain every absence (Section 4), so the delivery question needs one check in ArgoCD before any fix is attempted.
+A confirmed contributing cause is the following configuration: `monitoring/values.yaml:34` sets `crds.enabled: false`. Without the CRDs, the operator cannot create Prometheus or Alertmanager resources, which matches the missing `servicemonitor` resource type exactly. That does not explain every absence (Section 4), so the delivery question needs one check in ArgoCD before any fix is attempted.
 
 Three further defects sit latent in the committed configuration and will bite the day the stack does come up:
 
