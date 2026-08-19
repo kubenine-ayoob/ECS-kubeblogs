@@ -226,21 +226,7 @@ Alerting and Prometheus-based metrics collection were not detected in the inspec
 
 The GitOps repository contains an Airflow deployment and references to Python/Airflow metrics functionality.
 
-Before documenting Airflow as definitively unmonitored, verify:
-
-```bash
-grep -n -A30 "^otelCollector:" customer/airflow-cluster/3535353535/airflow-3535353535/values.yaml
-
-kubectl get servicemonitor -A
-```
-
-The expected investigation is:
-
-1. Is StatsD/metrics generation enabled?
-2. Is the StatsD exporter running?
-3. Is a ServiceMonitor rendered?
-4. Is there a Prometheus instance scraping it?
-5. Are the metrics visible anywhere?
+Airflow observability is currently not active in the inspected EKS cluster. The GitOps configuration explicitly disables both Airflow OTel traces (tracesEnabled: false) and OTel metrics (metricsEnabled: false). No StatsD or OTel Collector pod was detected in the cluster, and the Kubernetes API does not expose the ServiceMonitor resource. No Prometheus instance was detected either. The Airflow service and workload are running, but there is currently no verified metrics or tracing collection path for Airflow.
 
 ---
 
