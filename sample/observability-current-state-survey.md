@@ -36,7 +36,7 @@ The main gap is **application-level observability**:
 | Log storage | Loki filesystem | `object_store: filesystem`, `/var/loki/chunks` | Confirmed |
 | Log retention | No explicit retention setting identified | Loki ConfigMap inspection | Gap / Verify |
 | Kubernetes metrics | Metrics Server | `metrics-server` pod running in `kube-system` | Confirmed |
-| Application metrics | No application scrape annotations identified; no app ServiceMonitors found in inspected repo | kubectl + GitOps inspection | Gap |
+| Application metrics | No application metrics collection path identified for DeepIQ application workloads | GitOps inspection + cluster checks | Gap |
 | Traces | No Tempo/Jaeger/OTel deployment identified | kubectl checks | Gap |
 | OpenTelemetry | No OTel deployment/configuration identified in cluster | kubectl checks | Gap |
 | Alerting | Prometheus/Alertmanager not detected in inspected EKS cluster | kubectl get pods -A | grep -Ei 'prometheus|alertmanager|grafana' | Not detected |
