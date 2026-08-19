@@ -21,8 +21,8 @@ The main gap is **application-level observability**:
 - No distributed tracing path was identified.
 - Loki is using a filesystem backend with a 10 Gi PVC, and no explicit retention configuration was identified in the inspected Loki ConfigMap.
 - Promtail is deployed as a DaemonSet and is the current log collection agent.
-- Alerting requires additional verification because Prometheus/Alertmanager were not confirmed from the live pod inventory supplied.
-- Airflow observability requires an additional repository/live check before being stated as a confirmed gap.
+- No Prometheus, Alertmanager, or Grafana pods were detected in the inspected EKS cluster.
+- Airflow OTel metrics and traces are explicitly disabled in the GitOps configuration, and no StatsD or OTel Collector pod was detected in the inspected cluster.
 
 **Overall assessment:** The current environment provides basic infrastructure/log visibility, but it does not yet provide complete application observability across logs, metrics, traces, and alerting.
 
@@ -144,7 +144,7 @@ kube-system/metrics-server-7b478c6458-rp96q
 
 However, Metrics Server is not a replacement for a Prometheus-based application metrics platform.
 
-The inspected application pods did not expose the standard Prometheus scrape annotations. Only the following pod was returned by the annotation check:
+No DeepIQ application workload was identified with Prometheus scrape annotations. One cert-manager pod exposed Prometheus scrape annotations, but cert-manager is an infrastructure component. Only the following pod was returned by the annotation check:
 
 ```text
 cert-manager
@@ -364,7 +364,7 @@ OpenTelemetry instrumentation
 
 ### Why
 
-The currently identified problems are primarily **coverage and configuration gaps**, not evidence that the existing observability ecosystem is fundamentally unsuitable.
+The currently identified problems are primarily coverage and configuration gaps. The existing Loki/Promtail foundation can be extended rather than immediately replaced.
 
 The recommended sequence is:
 
