@@ -218,15 +218,7 @@ This means the cluster being inspected does not currently expose the Argo CD App
 
 ### Status
 
-**VERIFY before making a definitive alerting conclusion.**
-
-Recommended checks:
-
-```bash
-kubectl api-resources | grep -Ei 'application|applicationset'
-kubectl get pods -A | grep -Ei 'prometheus|alertmanager|grafana'
-kubectl get servicemonitor,podmonitor -A
-```
+Alerting and Prometheus-based metrics collection were not detected in the inspected cluster. Prometheus, Alertmanager, and Grafana pods were not found, and the Kubernetes API does not expose the ServiceMonitor resource. Argo CD Application/ApplicationSet resources were also not registered in this cluster.
 
 ---
 
