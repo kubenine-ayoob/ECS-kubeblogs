@@ -16,7 +16,7 @@
 
 Container logs flow end to end: Promtail (DaemonSet, 3/3 ready) ships to Loki. That path is intact, though Loki has no retention policy and no durable storage.
 
-Nothing else collects anything:
+No other observability collection path was identified in the inspected cluster:
 
 - No Prometheus, Alertmanager, or Grafana pod is running in the inspected cluster.
 - The Prometheus Operator CRDs are not installed -- the API has no `servicemonitor` resource type.
@@ -239,11 +239,11 @@ Four problems:
 
 **Not determinable from this repository:** logging libraries, structured vs plain text, and correlation IDs per service. No `LOG_FORMAT` or `LOG_LEVEL` variable appears in any application chart, and no request-ID propagation is configured anywhere. That last point matters most: without a correlation ID and without traces, following one request across gateway -> platform -> backend is manual timestamp matching. Completing this needs a pass over the service repositories.
 
-## 6.2 Metrics -- nothing collected from applications
+## 6.2 Metrics -- no application metrics collection identified
 
 Metrics Server is running and serves the resource-metrics API used by HPAs. It is not a metrics store and holds no history.
 
-Beyond that, nothing collects application metrics, for four reasons that compound. Even once Prometheus runs, causes B, C and D remain:
+Beyond that, no application metrics collection path was identified. for four reasons that compound. Even once Prometheus runs, causes B, C and D remain:
 
 **A. Prometheus is not running** (Sections 3, 4).
 
@@ -460,7 +460,7 @@ Prometheus (metrics), Loki (logs), Tempo (traces), Grafana (visualization), Aler
 
 **Why.** The stack has already been chosen, vendored into this repository, and integrated with Keycloak SSO. What is missing is delivery and configuration, not a product decision. Switching platforms now would discard that work and still leave the largest cost -- instrumenting the applications -- entirely unpaid.
 
-The first four fixes are edits to files already in this repository, and the ApplicationSet's automated sync applies them without manual steps.
+The first four fixes are configuration changes in files already present in the repository. Once the monitoring Application is confirmed to be generated and syncing correctly, ArgoCD's automated sync can apply them.
 
 ## 11.3 Runner-up: Option A -- Grafana Cloud
 
@@ -567,7 +567,7 @@ Items 1 to 6 are hours of work and unblock everything else.
 | Requirement | Status |
 |---|---|
 | Every service and pipeline in the inventory with its observability state | Section 8 -- owner and criticality need team input |
-| Top pain points with concrete examples | **Outstanding -- Section 9, owner to complete** |
+| Top pain points with concrete examples | **Done -- Section 9 identifies five operational gaps; historical incident examples were not available from the inspected evidence.** |
 | One recommended stack with reasoning | Done (11.2) |
 | Runner-up named with why it lost | Done (11.3) |
 | Diagrams readable without having done the investigation | Done (Sections 5, 11.4) |
