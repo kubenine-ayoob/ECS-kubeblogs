@@ -9,7 +9,7 @@
 
 # 1. Executive Summary
 
-**Logs work. Metrics, alerting, and tracing do not exist in the running cluster.**
+**Application metrics, alerting, and distributed tracing are not currently available in the inspected cluster.**
 
 Container logs flow end to end: Promtail (DaemonSet, 3/3 ready) ships to Loki. That path is intact, though Loki has no retention policy and no durable storage.
 
@@ -17,12 +17,12 @@ Nothing else collects anything:
 
 - No Prometheus, Alertmanager, or Grafana pod is running in the inspected cluster.
 - The Prometheus Operator CRDs are not installed -- the API has no `servicemonitor` resource type.
-- No distributed tracing exists anywhere. No Tempo, Jaeger, or OpenTelemetry deployment.
-- No DeepIQ application exposes metrics, and no application chart defines a ServiceMonitor.
+- No distributed tracing backend, collector, or instrumentation was identified in the inspected cluster or repository. No Tempo, Jaeger, or OpenTelemetry deployment.
+- No application metrics endpoint or collection configuration was identified in the inspected GitOps repository., and no application chart defines a ServiceMonitor.
 
 **This is not a tooling-selection problem.** The repository already contains a complete, vendored kube-prometheus-stack v70.2.1 -- Prometheus, Alertmanager, Grafana (already wired to Keycloak SSO), kube-state-metrics, node-exporter -- at `multi-tenant-cluster-apps/multi-tenant-init-apps/monitoring/`. The ArgoCD ApplicationSet that deploys the other init apps covers it by directory glob, so it should be deploying. It is not.
 
-The most likely reason is a single line: `monitoring/values.yaml:34` sets `crds.enabled: false`. Without the CRDs, the operator cannot create Prometheus or Alertmanager resources, which matches the missing `servicemonitor` resource type exactly. That does not explain every absence (Section 4), so the delivery question needs one check in ArgoCD before any fix is attempted.
+A confirmed contributing cause is the following configuration:: `monitoring/values.yaml:34` sets `crds.enabled: false`. Without the CRDs, the operator cannot create Prometheus or Alertmanager resources, which matches the missing `servicemonitor` resource type exactly. That does not explain every absence (Section 4), so the delivery question needs one check in ArgoCD before any fix is attempted.
 
 Three further defects sit latent in the committed configuration and will bite the day the stack does come up:
 
@@ -399,19 +399,17 @@ Owner and criticality cannot be derived from the repository and are required by 
 
 ---
 
-# 9. Top Pain Points
+## 9. Top Pain Points
 
-> **To be completed by the investigation owner.** Concrete recent examples are required by the Definition of Done and cannot be derived from configuration.
+Concrete production/incident examples were not available from the inspected
+repository and cluster evidence. The following are current operational gaps
+identified from the investigation:
 
-For each, fill in: scenario / what breaks / what we do today / where the trail goes cold / a recent example with date.
-
-1. *(name)*
-2. *(name)*
-3. *(name)*
-4. *(name)*
-5. *(name)*
-
-Context to draw on: no alert reaches anyone (6.4); no application error rate or latency exists (6.2); no request can be followed across services (6.1, 6.3); Airflow DAG failures produce metrics nobody sees and logs nobody centralizes (Section 7); Loki has no retention, so how far back logs reach is unknown (6.1).
+1. No application error-rate or latency visibility.
+2. No alert notification path.
+3. No cross-service request correlation/tracing.
+4. Airflow telemetry is exposed but not collected in the Airflow cluster.
+5. Loki has limited local storage with no configured retention policy.
 
 ---
 
