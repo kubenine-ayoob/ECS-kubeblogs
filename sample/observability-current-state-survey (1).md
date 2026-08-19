@@ -1,8 +1,11 @@
 # Observability Current-State Survey
 
 **Scope:** DeepIQ datastudio EKS cluster (inspected) + helm-gitops repository
+
 **Date:** 19 August 2026
+
 **Status:** Draft for review with @gvishnu
+
 **Purpose:** Establish current observability coverage, identify gaps, recommend a tooling direction.
 
 ---
