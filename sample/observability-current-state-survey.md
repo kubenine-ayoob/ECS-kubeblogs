@@ -204,21 +204,37 @@ Cross-service troubleshooting remains dependent on manually correlating timestam
 
 ---
 
-# 7. Alerting
+# 7. Alerting and Prometheus
 
-Prometheus and Alertmanager were not confirmed from the supplied live pod inventory.
-
-The following command did not return Application/Applicationset resources:
+No Prometheus, Alertmanager, or Grafana pods were detected in the inspected EKS cluster:
 
 ```bash
-kubectl get applications,applicationsets -A
+kubectl get pods -A | grep -Ei 'prometheus|alertmanager|grafana'
 ```
+No output was returned.
 
-This means the cluster being inspected does not currently expose the Argo CD Application CRDs under those resource names, or Argo CD is not installed/registered in that cluster context.
+The Kubernetes API also does not expose the Prometheus Operator ServiceMonitor resource:
 
-### Status
+```bash
+kubectl get servicemonitor,podmonitor -A
+```
+returned:
+error: the server doesn't have a resource type "servicemonitor"
 
-Alerting and Prometheus-based metrics collection were not detected in the inspected cluster. Prometheus, Alertmanager, and Grafana pods were not found, and the Kubernetes API does not expose the ServiceMonitor resource. Argo CD Application/ApplicationSet resources were also not registered in this cluster.
+The API resource check also did not show Argo CD Application or ApplicationSet resources:
+
+```bash
+kubectl api-resources | grep -Ei 'application|applicationset'
+```
+Only an unrelated ApplicationNetworkPolicy resource was returned.
+
+### Finding
+
+Prometheus-based metrics collection, Alertmanager-based alerting, and Grafana were not detected in the inspected EKS cluster.
+
+This should be interpreted as a finding about the inspected cluster, not proof that these components do not exist elsewhere.
+
+Scope limitation: Prometheus/Grafana/Alertmanager may exist in another cluster, namespace, account, or external/managed environment. The current evidence only establishes that they were not detected through the inspected cluster context.
 
 ---
 
