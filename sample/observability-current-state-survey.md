@@ -53,7 +53,7 @@ The main gap is **application-level observability**:
 |---|---|---|---|
 | `datastudio` | gateway-service, platform-service, user-management-service, asset-service, databrowser-service, file-browser-service, git-service | Container image names identify services; GitOps repo contains application charts | No application scrape annotations found |
 | `datastudio` | reactjs-app, nextjs-app | React / Next.js identified from workload/image names | No application scrape annotations found |
-| `datastudio` | airflow-service | Airflow image/configuration present | Metrics path requires verification |
+| `datastudio` | airflow-service | Airflow image/configuration present | OTel metrics/traces explicitly disabled; no StatsD/OTel collection path detected |
 | `bizcontext` | backend-service, frontend-service | Application-specific images | No application scrape annotations found |
 | `drilluminatibackend` | django-service, celery-service, celery-beat-service | Django/Python identified from workload names and image naming | No application scrape annotations found |
 | `drilluminatidemointernal` | django-service, celery-service, celery-beat-service | Django/Python identified | No application scrape annotations found |
@@ -251,7 +251,7 @@ Airflow observability is currently not active in the inspected EKS cluster. The 
 | Priority | Gap | Impact | Recommended action |
 |---|---|---|---|
 | P1 | Application metrics not evident | Cannot measure application error rate/latency/traffic reliably | Add Prometheus-compatible metrics / OTel metrics |
-| P1 | Alerting path not confirmed | Potentially no actionable notification path | Verify Prometheus + Alertmanager and configure receivers |
+| P1 | Alerting path not detected in inspected EKS cluster | No actionable alerting path was detected in the inspected cluster | Verify whether alerting is provided externally or in another cluster; otherwise deploy Prometheus + Alertmanager |
 | P1 | Loki retention/storage strategy incomplete | Risk of storage exhaustion | Configure retention and move durable chunks/index data to S3 |
 | P1 | No distributed tracing | Slow cross-service troubleshooting | Introduce OpenTelemetry + Tempo |
 | P2 | Promtail is legacy | Long-term support/migration risk | Plan Promtail → Grafana Alloy |
