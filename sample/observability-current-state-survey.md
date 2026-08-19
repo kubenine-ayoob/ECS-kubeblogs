@@ -39,9 +39,9 @@ The main gap is **application-level observability**:
 | Application metrics | No application scrape annotations identified; no app ServiceMonitors found in inspected repo | kubectl + GitOps inspection | Gap |
 | Traces | No Tempo/Jaeger/OTel deployment identified | kubectl checks | Gap |
 | OpenTelemetry | No OTel deployment/configuration identified in cluster | kubectl checks | Gap |
-| Alerting | Prometheus/Alertmanager not confirmed in supplied live inventory | kubectl inventory | Verify |
+| Alerting | Prometheus/Alertmanager not detected in inspected EKS cluster | kubectl get pods -A | grep -Ei 'prometheus|alertmanager|grafana' | Not detected |
 | Log agent | Promtail 3.0.0 | Promtail DaemonSet | Migration candidate |
-| Grafana | Not confirmed from supplied live pod inventory | kubectl inventory | Verify |
+| Grafana | Grafana pod not detected in inspected EKS cluster | Same cluster check | Not detected / Verify elsewhere |
 
 ---
 
@@ -163,7 +163,8 @@ The current evidence indicates:
 Kubernetes resource metrics     → available
 Application RED metrics         → not evident
 Application business metrics    → not evident
-Prometheus collection           → VERIFY
+Prometheus collection in inspected EKS cluster   → Not detected
+External/other-cluster Prometheus → VERIFY
 ```
 
 Examples of missing application metrics:
@@ -447,7 +448,7 @@ Do **not** make a final managed-platform cost claim until actual daily log volum
 
 # 14. Proposed Follow-up Work
 
-1. **Verify current Prometheus/Grafana/Alertmanager deployment**
+1. **Verify whether Prometheus/Grafana/Alertmanager are deployed in another cluster, namespace, AWS account, or external/managed environment**
 2. **Configure Alertmanager receivers and severity routing**
 3. **Configure Loki retention**
 4. **Move Loki durable storage to S3**
